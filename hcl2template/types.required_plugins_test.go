@@ -137,7 +137,19 @@ func TestPackerConfig_required_plugin_parse(t *testing.T) {
 					VersionConstraints []VersionConstraint
 					RequiredPlugins    []*RequiredPlugins
 				}{
-					RequiredPlugins: nil,
+					RequiredPlugins: []*RequiredPlugins{
+						{RequiredPlugins: map[string]*RequiredPlugin{
+							"amazon": {
+								Name:   "amazon",
+								Source: "github.com/hashicorp/amazon",
+								Type:   &addrs.Plugin{Hostname: "github.com", Namespace: "hashicorp", Type: "amazon"},
+								Requirement: VersionConstraint{
+									Required: nil,
+								},
+								PluginDependencyReason: PluginDependencyImplicit,
+							},
+						}},
+					},
 				},
 			}},
 		{"missing-required-plugin-for-builder", PackerConfig{

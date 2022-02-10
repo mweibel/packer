@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/packer/hcl2template/addrs"
-	"github.com/hashicorp/packer/packer"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -98,19 +97,6 @@ func (cfg *PackerConfig) decodeImplicitRequiredPluginsBlock(k ComponentKind, blo
 	// Currently all block types are `type "component-kind" ["name"] {`
 	// this makes this simple.
 	componentName := block.Labels[0]
-
-	store := map[ComponentKind]packer.BasicStore{
-		Builder:       cfg.parser.PluginConfig.Builders,
-		PostProcessor: cfg.parser.PluginConfig.PostProcessors,
-		Provisioner:   cfg.parser.PluginConfig.Provisioners,
-		Datasource:    cfg.parser.PluginConfig.DataSources,
-	}[k]
-	if store.Has(componentName) {
-		// If any core or pre-loaded plugin defines the `happycloud-uploader`
-		// pp, skip. This happens for core and manually installed plugins, as
-		// they will be listed in the PluginConfig before parsing any HCL.
-		return nil
-	}
 
 	redirect := map[ComponentKind]map[string]string{
 		Builder:       cfg.parser.PluginConfig.BuilderRedirects,
